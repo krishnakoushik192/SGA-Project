@@ -1,0 +1,13 @@
+com\example\app\dto\StudentCourseView.class
+com\example\app\Application.class
+com\example\app\config\DataInitializer.class
+com\example\app\domain\Course.class
+com\example\app\service\CourseService.class
+com\example\app\repository\StudentRepository.class
+com\example\app\controller\HomeController.class
+com\example\app\service\StudentService.class
+com\example\app\controller\CourseController.class
+com\example\app\repository\CourseRepository.class
+com\example\app\controller\StudentController.class
+com\example\app\domain\Student.class
+com\example\app\health\HealthController.class

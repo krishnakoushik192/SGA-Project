@@ -1,0 +1,172 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #64748b;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --border: #dbe3ef;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --error: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: 32px 20px;
+}
+
+.narrow {
+  max-width: 720px;
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.nav a,
+.link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav a:hover,
+.link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.hero {
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.hero h1,
+.card h1,
+.card h2 {
+  margin-top: 0;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.alert {
+  border-radius: 12px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+}
+
+.success {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+label {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+input,
+select {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  padding: 12px;
+  width: 100%;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary);
+  outline: 2px solid rgba(37, 99, 235, 0.15);
+}
+
+.button {
+  background: var(--primary);
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 800;
+  padding: 11px 18px;
+  text-decoration: none;
+}
+
+.button:hover {
+  background: var(--primary-dark);
+}
+
+.button.secondary {
+  background: #e2e8f0;
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.error {
+  color: var(--error);
+  font-size: 0.9rem;
+  font-weight: 700;
+}

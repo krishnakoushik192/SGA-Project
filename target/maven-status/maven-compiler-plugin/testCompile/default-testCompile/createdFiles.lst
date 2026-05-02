@@ -1,0 +1,4 @@
+com\example\app\service\StudentServiceTest.class
+com\example\app\ApplicationTests.class
+com\example\app\repository\StudentRepositoryTest.class
+com\example\app\service\CourseServiceTest.class
