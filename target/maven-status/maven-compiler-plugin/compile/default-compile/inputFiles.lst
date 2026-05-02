@@ -1,0 +1,13 @@
+C:\Users\koush\sga-2\src\main\java\com\example\app\Application.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\config\DataInitializer.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\controller\CourseController.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\controller\HomeController.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\controller\StudentController.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\domain\Course.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\domain\Student.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\dto\StudentCourseView.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\health\HealthController.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\repository\CourseRepository.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\repository\StudentRepository.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\service\CourseService.java
+C:\Users\koush\sga-2\src\main\java\com\example\app\service\StudentService.java

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student-Course CRUD App Report</title>
+  <style>
+    @page {
+      margin: 18mm 16mm;
+      size: A4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      color: #111827;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      line-height: 1.45;
+      margin: 0 auto;
+      max-width: 900px;
+      padding: 28px 36px;
+    }
+
+    header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    header h1 {
+      flex: 1;
+      font-size: 18px;
+      margin: 0;
+    }
+
+    header .id {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 150px;
+      text-align: right;
+    }
+
+    h2 {
+      border-top: 1px solid #9ca3af;
+      color: #316ac5;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      margin: 28px 0 12px;
+      padding-top: 18px;
+    }
+
+    h2:first-of-type {
+      border-top: 0;
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    h3 {
+      color: #316ac5;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      margin: 18px 0 8px;
+    }
+
+    h4 {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      margin: 14px 0 6px;
+    }
+
+    p {
+      margin: 7px 0 10px;
+    }
+
+    ul,
+    ol {
+      margin: 7px 0 12px 24px;
+    }
+
+    li {
+      margin: 3px 0;
+    }
+
+    code,
+    pre {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    pre {
+      background: #ffffff;
+      color: #0f172a;
+      margin: 8px 0 14px;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .title {
+      color: #316ac5;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .label {
+      color: #316ac5;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 10px 0 4px;
+    }
+
+    .code-label {
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .screenshot {
+      background: #f1f5f9;
+      margin: 12px 0 18px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .screenshot img {
+      border: 1px solid #e5e7eb;
+      max-width: 100%;
+    }
+
+    .caption {
+      color: #4b5563;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .page-break {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .two-column {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 10px 0 18px;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #d1d5db;
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eff6ff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .small {
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div></div>
+    <h1>Staff Graded Assignment</h1>
+    <div class="id">Student ID: 2024EB01737</div>
+  </header>
+
+  <main>
+    <div class="title">Student-Course App: Design and Implementation Approach</div>
+
+    <h2>1. Overview</h2>
+    <p>
+      This project is a Spring Boot MVC application that manages two related entities:
+      <strong>Student</strong> and <strong>Course</strong>. The implementation follows a layered
+      architecture:
+    </p>
+    <ul>
+      <li>Controller layer for request handling and JSP view binding</li>
+      <li>Service layer for business flow and update logic</li>
+      <li>Repository layer for persistence and custom join queries</li>
+      <li>JPA entities for schema design and validation constraints</li>
+      <li>JSP views for list, create, and update screens</li>
+    </ul>
+    <p>The application currently supports:</p>
+    <ul>
+      <li>List students</li>
+      <li>Create student</li>
+      <li>Update student</li>
+      <li>List students with joined course details</li>
+      <li>List courses</li>
+      <li>Create course</li>
+      <li>Update course</li>
+    </ul>
+
+    <h2>2. Entity Relationship Design</h2>
+    <div class="label">ER Design</div>
+    <pre>erDiagram
+  COURSE ||--o{ STUDENT : has
+
+  COURSE {
+    Long id PK
+    String title
+    String code UK
+    Integer credits
+  }
+
+  STUDENT {
+    Long id PK
+    String name
+    String email UK
+    LocalDate enrollmentDate
+    Long course_id FK
+  }</pre>
+
+    <div class="label">Design Rationale</div>
+    <p>The relationship is modeled as one Course -> many Students.</p>
+    <ul>
+      <li>Course owns course-level data: title, unique code, and credits.</li>
+      <li>Student owns student-level data: name, unique email, and enrollment date.</li>
+      <li><code>course_id</code> is a mandatory foreign key, which guarantees every student belongs to a valid course.
+      </li>
+      <li>The unique email and course code constraints prevent duplicate logical records.</li>
+    </ul>
+
+    <div class="label">JPA Mapping</div>
+    <p>Course defines the one-to-many side:</p>
+    <pre>@Entity
+public class Course {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @NotBlank(message = "Course code is required")
+  @Column(nullable = false, unique = true, length = 20)
+  private String code;
+
+  @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = false)
+  private List&lt;Student&gt; students = new ArrayList&lt;&gt;();
+}</pre>
+
+    <p>Student defines the many-to-one side:</p>
+    <pre>@Entity
+public class Student {
+  @NotBlank(message = "Email is required")
+  @Email(message = "Email must be valid")
+  @Column(nullable = false, unique = true)
+  private String email;
+
+  @NotNull(message = "Course is required")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "course_id", nullable = false)
+  private Course course;
+}</pre>
+    <p>
+      This is a good fit because the actual foreign key is stored on the Student table.
+      It keeps the database relationship simple and makes it easy to list students with
+      their assigned courses.
+    </p>
+
+    <h2 class="page-break">3. Implementation Details for Each Operation</h2>
+    <h3>3.1 Student Operations</h3>
+    <h4>A. List Students with Course Details</h4>
+    <div class="code-label">Flow</div>
+    <ol>
+      <li><code>GET /students</code> reaches <code>StudentController.listStudents</code>.</li>
+      <li>The controller calls <code>studentService.findAllStudents()</code>.</li>
+      <li>The controller also calls <code>studentService.findStudentCourseDetails()</code>.</li>
+      <li>The repository executes a custom JPQL inner join query.</li>
+      <li>Data is passed to <code>students/list.jsp</code>.</li>
+    </ol>
+
+    <div class="code-label">Controller code</div>
+    <pre>@GetMapping
+public String listStudents(Model model) {
+  model.addAttribute("students", studentService.findAllStudents());
+  model.addAttribute("studentCourseDetails", studentService.findStudentCourseDetails());
+  return "students/list";
+}</pre>
+
+    <div class="code-label">Repository inner join query</div>
+    <pre>@Query("""
+  select new com.example.app.dto.StudentCourseView(
+    s.id, s.name, s.email, s.enrollmentDate,
+    c.id, c.title, c.code, c.credits
+  )
+  from Student s
+  inner join s.course c
+  order by s.name
+  """)
+List&lt;StudentCourseView&gt; findStudentCourseDetails();</pre>
+
+    <p>
+      This query returns only the fields needed for the joined table instead of exposing
+      full entity graphs to the JSP page. The result is clearer and directly satisfies
+      the requirement to perform an inner join between both entities.
+    </p>
+
+    <div class="code-label">Screenshot</div>
+    <div class="screenshot">
+      <img src="screenshots/students-list.png" alt="Students list and joined course details screen">
+      <div class="caption">Students list page with joined Student-Course details.</div>
+    </div>
+
+    <h4>B. Create Student</h4>
+    <div class="code-label">Flow</div>
+    <ol>
+      <li><code>GET /students/new</code> returns the empty student form.</li>
+      <li>The user enters student details and selects a course.</li>
+      <li><code>POST /students</code> binds fields to a <code>Student</code> object.</li>
+      <li>Controller validates the submitted fields and selected course.</li>
+      <li>Service resolves <code>courseId</code> to a managed <code>Course</code>.</li>
+      <li>The student is saved with a valid foreign key relationship.</li>
+      <li>Duplicate email conflicts are shown as form errors.</li>
+    </ol>
+
+    <div class="code-label">Controller-side binding</div>
+    <pre>@PostMapping
+public String createStudent(
+  @Valid @ModelAttribute("student") Student student,
+  BindingResult bindingResult,
+  @RequestParam(value = "course.id", required = false) Long courseId,
+  Model model,
+  RedirectAttributes redirectAttributes
+) {
+  validateCourseSelection(courseId, bindingResult);
+  if (bindingResult.hasErrors()) {
+    addStudentFormAttributes(model, "Add Student", "/students");
+    return "students/form";
+  }
+
+  try {
+    studentService.createStudent(student, courseId);
+    return "redirect:/students";
+  } catch (DataIntegrityViolationException ex) {
+    bindingResult.rejectValue("email", "duplicate", "Student email must be unique.");
+    return "students/form";
+  }
+}</pre>
+
+    <div class="code-label">Service logic</div>
+    <pre>public Student createStudent(Student student, Long courseId) {
+  student.setCourse(findCourse(courseId));
+  return studentRepository.save(student);
+}</pre>
+
+    <div class="code-label">Screenshot</div>
+    <div class="screenshot">
+      <img src="screenshots/student-create.png" alt="Create student form">
+      <div class="caption">Add Student form with course dropdown.</div>
+    </div>
+
+    <h4>C. Update Student</h4>
+    <div class="code-label">Flow</div>
+    <ol>
+      <li><code>GET /students/{id}/edit</code> loads the student by id.</li>
+      <li>Existing values are pre-filled in the JSP form.</li>
+      <li><code>POST /students/{id}</code> validates submitted fields.</li>
+      <li>Service loads the existing persistent entity.</li>
+      <li>Only intended fields are changed: name, email, enrollment date, and course.</li>
+      <li>Duplicate email conflicts are caught and shown to the user.</li>
+    </ol>
+
+    <div class="code-label">Update service code</div>
+    <pre>public Student updateStudent(Long id, Student updatedStudent, Long courseId) {
+  Student student = findStudent(id);
+  student.setName(updatedStudent.getName());
+  student.setEmail(updatedStudent.getEmail());
+  student.setEnrollmentDate(updatedStudent.getEnrollmentDate());
+  student.setCourse(findCourse(courseId));
+  return studentRepository.save(student);
+}</pre>
+
+    <p>
+      This approach first loads the existing entity and then mutates only the allowed
+      fields. It avoids replacing the whole database row with unchecked submitted form data.
+    </p>
+
+    <div class="code-label">Screenshot</div>
+    <div class="screenshot">
+      <img src="screenshots/student-update.png" alt="Update student form">
+      <div class="caption">Update Student form populated with existing values.</div>
+    </div>
+
+    <h3 class="page-break">3.2 Course Operations</h3>
+    <h4>A. List Courses</h4>
+    <div class="code-label">Flow</div>
+    <ol>
+      <li><code>GET /courses</code> reaches <code>CourseController.listCourses</code>.</li>
+      <li>The controller calls <code>courseService.findAllCourses()</code>.</li>
+      <li>The service delegates to <code>courseRepository.findAll()</code>.</li>
+      <li>The course list is displayed by <code>courses/list.jsp</code>.</li>
+    </ol>
+
+    <div class="code-label">Controller code</div>
+    <pre>@GetMapping
+public String listCourses(Model model) {
+  model.addAttribute("courses", courseService.findAllCourses());
+  return "courses/list";
+}</pre>
+
+    <div class="code-label">Screenshot</div>
+    <div class="screenshot">
+      <img src="screenshots/courses-list.png" alt="Courses list screen">
+      <div class="caption">Courses list page with edit actions.</div>
+    </div>
+
+    <h4>B. Create Course</h4>
+    <div class="code-label">Flow</div>
+    <ol>
+      <li><code>GET /courses/new</code> returns the empty course form.</li>
+      <li>The user enters code, title, and credits.</li>
+      <li><code>POST /courses</code> validates the submitted course.</li>
+      <li>The service saves the course through the repository.</li>
+      <li>Duplicate course codes are caught and surfaced as validation errors.</li>
+    </ol>
+
+    <div class="code-label">Controller code</div>
+    <pre>@PostMapping
+public String createCourse(
+  @Valid @ModelAttribute("course") Course course,
+  BindingResult bindingResult,
+  Model model,
+  RedirectAttributes redirectAttributes
+) {
+  if (bindingResult.hasErrors()) {
+    model.addAttribute("formTitle", "Add Course");
+    return "courses/form";
+  }
+
+  try {
+    courseService.createCourse(course);
+    return "redirect:/courses";
+  } catch (DataIntegrityViolationException ex) {
+    bindingResult.rejectValue("code", "duplicate", "Course code must be unique.");
+    return "courses/form";
+  }
+}</pre>
+
+    <div class="code-label">Screenshot</div>
+    <div class="screenshot">
+      <img src="screenshots/course-create.png" alt="Create course form">
+      <div class="caption">Add Course form with validation-backed fields.</div>
+    </div>
+
+    <h4>C. Update Course</h4>
+    <div class="code-label">Flow</div>
+    <ol>
+      <li><code>GET /courses/{id}/edit</code> loads the course by id.</li>
+      <li>The form is pre-filled with existing values.</li>
+      <li><code>POST /courses/{id}</code> validates and submits changes.</li>
+      <li>The service loads the existing course entity.</li>
+      <li>Only title, code, and credits are updated.</li>
+      <li>Duplicate code conflicts are displayed on the course form.</li>
+    </ol>
+
+    <div class="code-label">Update service code</div>
+    <pre>public Course updateCourse(Long id, Course updatedCourse) {
+  Course course = findCourse(id);
+  course.setTitle(updatedCourse.getTitle());
+  course.setCode(updatedCourse.getCode());
+  course.setCredits(updatedCourse.getCredits());
+  return courseRepository.save(course);
+}</pre>
+
+    <div class="code-label">Screenshot</div>
+    <div class="screenshot">
+      <img src="screenshots/course-update.png" alt="Update course form">
+      <div class="caption">Update Course form populated with existing values.</div>
+    </div>
+
+    <h2 class="page-break">4. Supporting Implementation Details</h2>
+    <h3>Seed Data</h3>
+    <p>
+      The application uses <code>DataInitializer</code> to insert 10 courses and 10
+      students at startup when the database is empty. This supports immediate UI testing,
+      relationship validation, and screenshots without manual setup.
+    </p>
+    <pre>@Override
+public void run(String... args) {
+  if (courseRepository.count() &gt; 0 || studentRepository.count() &gt; 0) {
+    return;
+  }
+
+  List&lt;Course&gt; courses = courseRepository.saveAll(List.of(
+    new Course("Introduction to Programming", "CS101", 4),
+    new Course("Database Systems", "CS201", 4),
+    new Course("Web Development", "CS220", 3)
+    // seven additional courses
+  ));
+
+  studentRepository.saveAll(List.of(
+    new Student("Aarav Sharma", "aarav.sharma@example.com", LocalDate.of(2024, 7, 1), courses.get(0))
+    // nine additional students
+  ));
+}</pre>
+
+    <h3>Database Choice</h3>
+    <p>H2 in-memory database was used because it gives:</p>
+    <ul>
+      <li>Zero external database setup</li>
+      <li>Fast startup for demos and testing</li>
+      <li>Deterministic clean state with Hibernate <code>create-drop</code></li>
+    </ul>
+
+    <h3>View Technology</h3>
+    <p>JSP was used with Spring form tags because:</p>
+    <ul>
+      <li>It matches the Spring MVC assignment requirement.</li>
+      <li>It supports server-rendered forms and validation messages.</li>
+      <li>It keeps the stack simple for a CRUD-style application.</li>
+    </ul>
+
+    <h3>Validation and Error Handling</h3>
+    <p>Validation is defined at entity level using Jakarta Validation annotations:</p>
+    <ul>
+      <li><code>@NotBlank</code> for required text fields</li>
+      <li><code>@Email</code> for student email format</li>
+      <li><code>@NotNull</code> for enrollment date, course, and credits</li>
+      <li><code>@Min</code> and <code>@Max</code> for course credit range</li>
+    </ul>
+    <p>
+      Uniqueness conflicts are handled by catching <code>DataIntegrityViolationException</code>
+      inside controllers and converting them into user-friendly form errors.
+    </p>
+
+    <h2>5. Challenges Faced and How They Were Overcome</h2>
+    <h3>Challenge 1: Modeling the student-course relationship cleanly in forms</h3>
+    <h4>Problem</h4>
+    <p>
+      The UI needs the user to choose a course while creating or updating a student, but
+      HTML forms naturally submit simple values rather than full entity objects.
+    </p>
+    <h4>Approach</h4>
+    <p>The form submits <code>course.id</code>, and the service resolves it into a managed entity:</p>
+    <pre>student.setCourse(findCourse(courseId));</pre>
+    <h4>Why this solved it</h4>
+    <ul>
+      <li>It avoids brittle nested object binding.</li>
+      <li>It keeps persistence logic inside the service layer.</li>
+      <li>It guarantees the student is assigned to an existing course.</li>
+    </ul>
+
+    <h3>Challenge 2: Showing joined student and course data efficiently</h3>
+    <h4>Problem</h4>
+    <p>The student list needs both student fields and course fields in one table.</p>
+    <h4>Approach</h4>
+    <p>I used a repository-level JPQL inner join with a record projection:</p>
+    <pre>List&lt;StudentCourseView&gt; findStudentCourseDetails();</pre>
+    <h4>Why this solved it</h4>
+    <ul>
+      <li>It returns exactly the fields required by the screen.</li>
+      <li>It keeps the JSP simple.</li>
+      <li>It clearly demonstrates the required inner join.</li>
+    </ul>
+
+    <h3>Challenge 3: Preventing duplicate logical records</h3>
+    <h4>Problem</h4>
+    <p>Two students should not share the same email, and two courses should not share the same course code.</p>
+    <h4>Approach</h4>
+    <ul>
+      <li>Enforced uniqueness at the database level with <code>unique = true</code>.</li>
+      <li>Caught <code>DataIntegrityViolationException</code> in controllers.</li>
+      <li>Converted the exception into a readable validation error.</li>
+    </ul>
+
+    <h3>Challenge 4: Updating existing entities safely</h3>
+    <h4>Problem</h4>
+    <p>
+      Directly saving the submitted form object can overwrite fields carelessly and makes
+      update behavior harder to control.
+    </p>
+    <h4>Approach</h4>
+    <p>The service first loads the existing persistent entity, then updates only intended fields.</p>
+    <h4>Why this solved it</h4>
+    <ul>
+      <li>It keeps update behavior explicit.</li>
+      <li>It avoids accidental replacement semantics.</li>
+      <li>It works well with JPA-managed entities.</li>
+    </ul>
+
+    <h3>Challenge 5: Running Maven on a machine without global Maven</h3>
+    <h4>Problem</h4>
+    <p>The <code>mvn</code> command was not available globally in PowerShell.</p>
+    <h4>Approach</h4>
+    <p>A local Windows Maven launcher, <code>mvnw.cmd</code>, was added so the project can run with:</p>
+    <pre>.\mvnw.cmd spring-boot:run</pre>
+    <h4>Outcome</h4>
+    <p>The application can be started from the project directory without installing Maven globally.</p>
+
+    <h2>6. Testing Evidence</h2>
+    <p>The implementation includes the following tests:</p>
+    <ul>
+      <li><code>ApplicationTests</code>: verifies Spring Boot context loading.</li>
+      <li><code>StudentRepositoryTest</code>: verifies the custom student-course inner join query.</li>
+      <li><code>StudentServiceTest</code>: verifies create, update, and joined detail retrieval behavior.</li>
+      <li><code>CourseServiceTest</code>: verifies create, list, and update behavior.</li>
+    </ul>
+
+    <div class="code-label">Repository test example</div>
+    <pre>@DataJpaTest
+class StudentRepositoryTest {
+  @Test
+  void findStudentCourseDetailsReturnsInnerJoinRows() {
+    Course course = courseRepository.save(new Course("Database Systems", "CS201", 4));
+    studentRepository.save(new Student(
+      "Test Student",
+      "test.student@example.com",
+      LocalDate.of(2024, 8, 1),
+      course
+    ));
+
+    List&lt;StudentCourseView&gt; results = studentRepository.findStudentCourseDetails();
+
+    assertThat(results).hasSize(1);
+    assertThat(results.get(0).studentName()).isEqualTo("Test Student");
+    assertThat(results.get(0).courseCode()).isEqualTo("CS201");
+  }
+}</pre>
+
+    <p>Run tests with:</p>
+    <pre>.\mvnw.cmd test</pre>
+
+    <h2>7. Conclusion</h2>
+    <p>
+      The implementation is a complete Spring Boot MVC CRUD application with a properly
+      modeled one-to-many relationship between Course and Student. It uses JPA annotations
+      for schema mapping and validation, Spring Data repositories for persistence, services
+      for relationship assignment and update logic, controllers for JSP form workflows, and
+      a JPQL inner join query for the combined student-course listing.
+    </p>
+    <p>
+      The result is easy to understand, easy to test, and appropriate for a small relational
+      web application assignment.
+    </p>
+
+    <h2>8. GitHub URL</h2>
+    <p>Add the final GitHub repository URL here:</p>
+    <pre>https://github.com/krishnakoushik192/SGA-Project</pre>
+  </main>
+</body>
+
+</html>
